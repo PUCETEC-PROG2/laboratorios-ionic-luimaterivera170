@@ -1,10 +1,30 @@
-import { IonContent, IonHeader, IonList, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonHeader, IonList, IonPage, IonText, IonTitle, IonToolbar, useIonViewWillEnter } from '@ionic/react';
 import './Tab1.css';
-import { repositoryList } from '../interfaces/Repository';
 import RepoItem from '../components/RepoItem';
+import React from 'react';
+import { Repository } from '../interfaces/Repository';
+import { fetchRepositories } from '../services/GitHubService';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const Tab1: React.FC = () => {
+
+    const [repositoryList, setRepositoryList] = React.useState<Repository[]>([]);
+    const [loading, setLoading] = React.useState(false);
+
+    const loadRepos = async () => {
+      setLoading(true);
+      const reposData = await fetchRepositories();
+      setRepositoryList(reposData)
+      setLoading(false)
+    };
+
+    useIonViewWillEnter(() => {
+      loadRepos();
+    })
+
   return (
+    
+
     <IonPage>
       <IonHeader>
         <IonToolbar>
@@ -24,7 +44,12 @@ const Tab1: React.FC = () => {
           ))}
         </IonList> 
         
-        
+        {loading && <LoadingSpinner />}
+        {!loading && repositoryList.length === 0 &&
+          (<IonText color={'danger'}>
+            <p>No se pudieron cargar los repositorios</p>
+          </IonText>)
+        }
         
       </IonContent>
     </IonPage>
