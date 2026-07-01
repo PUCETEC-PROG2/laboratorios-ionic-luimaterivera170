@@ -51,3 +51,27 @@ export const fetchUserInfo = async (): Promise<GithubUser> => {
         throw new Error(`${(error as Error).message}`)
     }
 }
+
+// 2. PATCH - Editar un repositorio existente
+export const updateRepository = async (owner: string, repoName: string, newName: string, newDescription: string): Promise<Repository> => {
+    try {
+        const response = await githubClient.patch(`/repos/${owner}/${repoName}`, {
+            name: newName,
+            description: newDescription
+        });
+        return response.data as Repository;
+    } catch (error) {
+        console.error("Error al actualizar el repositorio", error);
+        throw new Error(`${(error as Error).message}`);
+    }
+};
+
+// 3. DELETE - Eliminar un repositorio
+export const deleteRepository = async (owner: string, repoName: string): Promise<void> => {
+    try {
+        await githubClient.delete(`/repos/${owner}/${repoName}`);
+    } catch (error) {
+        console.error("Error al eliminar el repositorio", error);
+        throw new Error(`${(error as Error).message}`);
+    }
+};

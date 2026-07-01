@@ -71,7 +71,7 @@ const Tab2: React.FC = () => {
             onIonChange={(e) => setRepositoryData({...repositoryData, description: e.detail.value!})}
             rows={6}
           />
-          {errorMsg != "" && <IonText color="danger"></IonText>}
+          {errorMsg !== "" && <IonText color="danger">{errorMsg}</IonText>}
           <IonButton
             className="form-field"
             expand="block"
